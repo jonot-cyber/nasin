@@ -13,7 +13,7 @@ use gtk::glib;
 
 fn create_row(task: &Task, list: &ListBox, tasks: Rc<RefCell<Tasks>>) -> ActionRow {
     let row = ActionRow::builder()
-        .title(&task.name)
+        .title(glib::markup_escape_text(&task.name))
         .subtitle(format!("Priority: {}", task.priority))
 	.build();
     let button = Button::builder()
