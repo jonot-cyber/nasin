@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Nasin
+Comment=Schedule when to do some tasks
+Type=Application
+Exec=nasin
+Terminal=false
+Categories=Office
+Icon=me.jonot.Nasin

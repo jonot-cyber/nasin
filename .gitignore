@@ -1,0 +1,4 @@
+/target
+build-dir
+.cargo
+.flatpak-builder
