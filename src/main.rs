@@ -8,7 +8,7 @@ use std::cell::RefCell;
 use libadwaita::prelude::*;
 
 use libadwaita::{ActionRow, Application, ApplicationWindow, HeaderBar, EntryRow};
-use gtk::{ListBox, Orientation, SelectionMode, Button};
+use gtk::{ListBox, Orientation, SelectionMode, Button, ScrolledWindow};
 use gtk::glib;
 
 fn create_row(task: &Task, list: &ListBox, tasks: Rc<RefCell<Tasks>>) -> ActionRow {
@@ -58,9 +58,14 @@ fn build_ui(app: &Application) {
     header_bar.pack_start(&step_button);
     header_bar.pack_start(&step_and_finish_button);
 
+    let viewport = ScrolledWindow::builder()
+        .child(&list)
+        .min_content_height(400)
+        .build();
+
     let content = gtk::Box::new(Orientation::Vertical, 0);
     content.append(&header_bar);
-    content.append(&list);
+    content.append(&viewport);
 
     let window = ApplicationWindow::builder()
 	.application(app)
