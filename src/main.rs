@@ -60,6 +60,7 @@ fn build_ui(app: &Application) {
 
     let viewport = ScrolledWindow::builder()
         .child(&list)
+        .vexpand(true)
         .min_content_height(400)
         .build();
 
