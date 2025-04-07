@@ -1,11 +1,10 @@
 {
     "id": "me.jonot.Nasin",
     "runtime": "org.gnome.Platform",
-    "runtime-version": "45",
+    "runtime-version": "48",
     "sdk": "org.gnome.Sdk",
     "sdk-extensions": [
-	"org.freedesktop.Sdk.Extension.rust-stable",
-	"org.freedesktop.Sdk.Extension.llvm16"
+	"org.freedesktop.Sdk.Extension.rust-stable"
     ],
     "command": "nasin",
     "finish-args": [
@@ -15,13 +14,11 @@
 	"--device=dri"
     ],
     "build-options": {
-	"append-path": "/usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/llvm16/bin",
+	"append-path": "/usr/lib/sdk/rust-stable/bin",
 	"build-args": [
 	    "--share=network"
 	],
 	"env": {
-	    "CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER": "clang",
-	    "CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUST_FLAGS": "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold"
 	}
     },
     "modules": [

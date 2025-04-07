@@ -1,6 +1,7 @@
 use std::{cmp::Ordering, fs::File, path::PathBuf};
 
-use serde::{Serialize, Deserialize};
+use chrono::{DateTime, Local};
+use serde::{Deserialize, Serialize};
 
 fn get_data_path() -> PathBuf {
     let mut path = dirs::data_dir().unwrap();
@@ -16,27 +17,40 @@ fn get_data_path() -> PathBuf {
     path
 }
 
-#[derive(Clone,Serialize,Deserialize)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct Task {
     pub name: String,
     pub priority: u8,
     pub paused: bool,
+    pub deadline: Option<DateTime<Local>>,
     age: u32,
     base_priority: u8,
 }
 
 impl Task {
-    pub fn new(name: String, priority: u8) -> Task {
+    pub fn new(name: String, priority: u8, deadline: Option<DateTime<Local>>) -> Task {
+        let new_priority = deadline
+            .map(Task::priority_from_deadline)
+            .unwrap_or(priority);
         Task {
             name,
-            priority,
+            priority: new_priority,
+            deadline,
             paused: false,
-            base_priority: priority,
+            base_priority: new_priority,
             age: 0,
         }
     }
 
+    fn priority_from_deadline(deadline: DateTime<Local>) -> u8 {
+        let diff = deadline - Local::now();
+        diff.num_days().min(u8::MAX as i64).max(1) as u8
+    }
+
     pub fn age(&mut self) {
+        if let Some(date) = self.deadline {
+            self.base_priority = Task::priority_from_deadline(date)
+        }
         if !self.paused {
             self.age = 0;
             self.priority = std::cmp::max(self.priority - 1, 1);
@@ -51,7 +65,11 @@ impl Task {
 
 impl PartialEq for Task {
     fn eq(&self, other: &Self) -> bool {
-        self.paused == other.paused && self.name == other.name && self.age == other.age && self.priority == other.priority && self.base_priority == other.base_priority
+        self.paused == other.paused
+            && self.name == other.name
+            && self.age == other.age
+            && self.priority == other.priority
+            && self.base_priority == other.base_priority
     }
 }
 
@@ -67,29 +85,24 @@ impl Ord for Task {
     fn cmp(&self, other: &Self) -> Ordering {
         match self.priority.cmp(&other.priority) {
             Ordering::Equal => other.age.cmp(&self.age),
-            x => x
+            x => x,
         }
     }
 }
 
-#[derive(Clone,Serialize,Deserialize)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct Tasks {
-    pub tasks: Vec<Task>
+    pub tasks: Vec<Task>,
 }
 
 impl Tasks {
     pub fn new() -> Self {
-        Tasks {
-            tasks: Vec::new()
-        }
+        Tasks { tasks: Vec::new() }
     }
 
     pub fn load() -> Self {
         let path = get_data_path();
-        let file = File::options()
-            .read(true)
-            .open(path)
-            .unwrap();
+        let file = File::options().read(true).open(path).unwrap();
         if file.metadata().unwrap().len() == 0 {
             Tasks::new()
         } else {
@@ -110,7 +123,7 @@ impl Tasks {
     pub fn step(&mut self) {
         // Nothing to do if the list is empty
         if self.tasks.is_empty() {
-            return
+            return;
         }
         self.tasks.sort();
         let mut current_task = self.tasks.remove(0);
@@ -137,7 +150,7 @@ impl Tasks {
     pub fn step_and_finish(&mut self) {
         // Nothing to do if the list is empty
         if self.tasks.is_empty() {
-            return
+            return;
         }
         self.tasks.sort();
         self.tasks.remove(0);
@@ -159,9 +172,9 @@ impl Tasks {
     pub fn remove(&mut self, task: Task) {
         for (i, i_task) in self.tasks.iter().enumerate() {
             if task == *i_task {
-            self.tasks.remove(i);
-            self.save();
-            return;
+                self.tasks.remove(i);
+                self.save();
+                return;
             }
         }
         // Save, but don't bother if we don't have anything here
