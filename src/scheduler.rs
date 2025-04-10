@@ -48,9 +48,6 @@ impl Task {
     }
 
     pub fn age(&mut self) {
-        if let Some(date) = self.deadline {
-            self.base_priority = Task::priority_from_deadline(date)
-        }
         if !self.paused {
             self.age = 0;
             self.priority = std::cmp::max(self.priority - 1, 1);
@@ -126,6 +123,12 @@ impl Tasks {
             return;
         }
         self.tasks.sort();
+        for task in &mut self.tasks {
+            if let Some(date) = task.deadline {
+                task.base_priority = Task::priority_from_deadline(date);
+                task.priority = task.priority.min(task.base_priority)
+            }
+        }
         let mut current_task = self.tasks.remove(0);
         for task in self.tasks.iter_mut() {
             task.age += 1
