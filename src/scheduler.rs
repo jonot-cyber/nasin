@@ -103,7 +103,14 @@ impl Tasks {
         if file.metadata().unwrap().len() == 0 {
             Tasks::new()
         } else {
-            serde_json::from_reader(file).unwrap()
+            let mut ret: Tasks = serde_json::from_reader(file).unwrap();
+            for task in &mut ret.tasks {
+                if let Some(date) = task.deadline {
+                    task.base_priority = Task::priority_from_deadline(date);
+                    task.priority = task.priority.min(task.base_priority)
+                }
+            }
+            ret
         }
     }
 
@@ -123,12 +130,6 @@ impl Tasks {
             return;
         }
         self.tasks.sort();
-        for task in &mut self.tasks {
-            if let Some(date) = task.deadline {
-                task.base_priority = Task::priority_from_deadline(date);
-                task.priority = task.priority.min(task.base_priority)
-            }
-        }
         let mut current_task = self.tasks.remove(0);
         for task in self.tasks.iter_mut() {
             task.age += 1
