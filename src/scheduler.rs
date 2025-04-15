@@ -104,12 +104,21 @@ impl Tasks {
             Tasks::new()
         } else {
             let mut ret: Tasks = serde_json::from_reader(file).unwrap();
+            let mut priority_modified = false;
             for task in &mut ret.tasks {
                 if let Some(date) = task.deadline {
+                    let new_priority = Task::priority_from_deadline(date);
+		    if task.base_priority != new_priority {
+			task.base_priority = new_priority;
+			priority_modified = true
+		    }
                     task.base_priority = Task::priority_from_deadline(date);
                     task.priority = task.priority.min(task.base_priority)
                 }
             }
+	    if priority_modified {
+		ret.tasks.sort();
+	    }
             ret
         }
     }
