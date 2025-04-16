@@ -80,6 +80,12 @@ impl Eq for Task {}
 
 impl Ord for Task {
     fn cmp(&self, other: &Self) -> Ordering {
+	if self.paused {
+	    return Ordering::Greater;
+	}
+	if other.paused {
+	    return Ordering::Less;
+	}
         match self.priority.cmp(&other.priority) {
             Ordering::Equal => other.age.cmp(&self.age),
             x => x,
