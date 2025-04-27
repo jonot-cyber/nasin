@@ -44,7 +44,7 @@ impl Task {
 
     fn priority_from_deadline(deadline: DateTime<Local>) -> u8 {
         let diff = deadline - Local::now();
-        diff.num_days().min(u8::MAX as i64).max(1) as u8
+        (diff.num_days() + 1).min(u8::MAX as i64).max(1) as u8
     }
 
     pub fn age(&mut self) {
