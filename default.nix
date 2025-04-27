@@ -23,7 +23,7 @@ rustPlatform.buildRustPackage rec {
   buildInputs = [ gtk4 libadwaita ];
 
   nativeBuildInputs = [ pkg-config hicolor-icon-theme wrapGAppsHook4 copyDesktopItems ];
-  cargoHash = "sha256-zUNbdFTRYtwmyDonScdjJjlFu3pG3dvr9gamYiWek3c=";
+  cargoHash = "sha256-6sZXx7nPlTqYjCxx4IJlbn5L17s2DhuDOnUJxHTAPtw=";
 
   desktopItems = [(makeDesktopItem {
     name = "nasin";
