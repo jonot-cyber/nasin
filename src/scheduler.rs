@@ -215,6 +215,7 @@ impl Tasks {
                 t.paused = !t.paused
             }
         }
+        self.tasks.sort();
         self.save();
     }
 }
