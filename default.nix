@@ -3,27 +3,24 @@
   gtk4,
   libadwaita,
   pkg-config,
-  fetchFromGitHub,
   hicolor-icon-theme,
   wrapGAppsHook4,
   copyDesktopItems,
   makeDesktopItem
 }:
-rustPlatform.buildRustPackage rec {
+
+rustPlatform.buildRustPackage {
   pname = "nasin";
   version = "1.0.2";
 
-  src = fetchFromGitHub {
-    owner = "jonot-cyber";
-    repo = pname;
-    rev = "master";
-    hash = "sha256-CPSajEFKJIvJe1G2u5oev7SCepZJ+1JlxDZkNhHlPlY=";
-  };
+  src = ./.;
 
   buildInputs = [ gtk4 libadwaita ];
 
   nativeBuildInputs = [ pkg-config hicolor-icon-theme wrapGAppsHook4 copyDesktopItems ];
-  cargoHash = "sha256-6sZXx7nPlTqYjCxx4IJlbn5L17s2DhuDOnUJxHTAPtw=";
+  cargoLock = {
+    lockFile = ./Cargo.lock;
+  };
 
   desktopItems = [(makeDesktopItem {
     name = "nasin";
