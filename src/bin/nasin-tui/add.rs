@@ -36,6 +36,13 @@ impl Popup<'_> {
         }
     }
 
+    pub fn reset(&mut self) {
+        self.current = FocusState::default();
+        self.name.value_mut().clear();
+        self.priority.value_mut().clear();
+        self.date.value_mut().clear();
+    }
+
     pub fn render(&mut self, area: Rect, buf: &mut Buffer) {
         let layout = Layout::default()
             .direction(ratatui::layout::Direction::Vertical)
