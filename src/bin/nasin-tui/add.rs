@@ -39,9 +39,8 @@ impl Popup<'_> {
     pub fn render(&mut self, area: Rect, buf: &mut Buffer) {
         let layout = Layout::default()
             .direction(ratatui::layout::Direction::Vertical)
-            .constraints(vec![Constraint::Length(1); 4])
+            .constraints(vec![Constraint::Length(1); 3])
             .split(area);
-        Paragraph::new("Add a Task...".bold()).render(layout[0], buf);
         TextPrompt::new("Name".into()).render(layout[1], buf, &mut self.name);
         TextPrompt::new("Priority".into()).render(layout[2], buf, &mut self.priority);
         TextPrompt::new("Date".into()).render(layout[3], buf, &mut self.date);

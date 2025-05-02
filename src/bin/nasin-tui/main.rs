@@ -141,14 +141,18 @@ fn task_to_row(task: &Task, highlight: bool) -> Row {
 
 impl Widget for &App<'_> {
     fn render(self, area: Rect, buf: &mut Buffer) {
-        let title = Line::from(" Nasin ".bold());
-        let block = Block::bordered()
-            .title(title.centered())
-            .border_set(border::THICK);
         if self.add_popup_open {
+            let title = Line::from(" Add Task... ".bold());
+            let block = Block::bordered()
+                .title(title.centered())
+                .border_set(border::THICK);
             self.add_popup.borrow_mut().render(block.inner(area), buf);
             block.render(area, buf);
         } else {
+            let title = Line::from(" Nasin ".bold());
+            let block = Block::bordered()
+                .title(title.centered())
+                .border_set(border::THICK);
             let header = Row::new(vec![
                 "P?".bold(),
                 "Name".bold(),
