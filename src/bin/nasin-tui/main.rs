@@ -58,8 +58,7 @@ impl App<'_> {
     fn handle_key_event(&mut self, key_event: KeyEvent) {
         if self.add_popup_open {
             match key_event.code {
-                // TODO: Create a way to ignore this?
-                KeyCode::Char('q') => self.add_popup_open = false,
+                KeyCode::Esc => self.add_popup_open = false,
                 KeyCode::Enter => {
                     if let Some(task) = self.add_popup.borrow().to_task() {
                         self.tasks.add(task);
