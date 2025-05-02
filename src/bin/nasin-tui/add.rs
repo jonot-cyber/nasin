@@ -1,4 +1,4 @@
-use chrono::{Local, NaiveDateTime};
+use chrono::{Local, NaiveDate, NaiveDateTime};
 use nasin::scheduler::Task;
 use ratatui::{
     layout::{Constraint, Layout},
@@ -30,7 +30,7 @@ impl Popup<'_> {
     pub fn new() -> Self {
         Self {
             current: FocusState::default(),
-            name: TextState::new(),
+            name: TextState::new().with_focus(tui_widgets::prompts::FocusState::Focused),
             priority: TextState::new(),
             date: TextState::new(),
         }
@@ -72,17 +72,14 @@ impl Popup<'_> {
     }
 
     pub fn to_task(&self) -> Option<Task> {
-        let priority: u8 = self.priority.value().parse().ok()?;
+        let priority: u8 = self.priority.value().parse().unwrap_or(1);
         let deadline_str = self.date.value();
         let deadline = if deadline_str.is_empty() {
             None
         } else {
-            Some(
-                NaiveDateTime::parse_from_str(deadline_str, "%Y-%m-%d")
-                    .ok()?
-                    .and_local_timezone(Local)
-                    .unwrap(),
-            )
+            let date = NaiveDate::parse_from_str(deadline_str, "%Y-%m-%d").ok()?;
+            let datetime: NaiveDateTime = date.into();
+            Some(datetime.and_local_timezone(Local).unwrap())
         };
         Some(Task::new(
             String::from(self.name.value()),
