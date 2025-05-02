@@ -71,7 +71,7 @@ impl App<'_> {
             }
         } else {
             match key_event.code {
-                KeyCode::Char('q') => self.exit = true,
+                KeyCode::Char('q') | KeyCode::Esc => self.exit = true,
                 KeyCode::Char('j') | KeyCode::Down => self.select_down(),
                 KeyCode::Char('k') | KeyCode::Up => self.select_up(),
                 KeyCode::Char('s') => self.step(),
