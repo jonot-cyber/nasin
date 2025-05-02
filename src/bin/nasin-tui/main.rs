@@ -87,7 +87,7 @@ impl App<'_> {
     // Move selection down
     fn select_down(&mut self) {
         let len = self.tasks.tasks.len();
-        self.selected = (self.selected + 1).min(len)
+        self.selected = (self.selected + 1).min(len - 1)
     }
 
     // Move selection down
