@@ -143,15 +143,45 @@ impl Widget for &App<'_> {
     fn render(self, area: Rect, buf: &mut Buffer) {
         if self.add_popup_open {
             let title = Line::from(" Add Task... ".bold());
+            let instructions = Line::from(vec![
+                " Next ".into(),
+                "<Tab>".blue().bold(),
+                " Previous ".into(),
+                "<S-Tab>".blue().bold(),
+                " Add ".into(),
+                "<Enter>".blue().bold(),
+                " Quit ".into(),
+                "<Esc> ".blue().bold(),
+            ]);
             let block = Block::bordered()
                 .title(title.centered())
+                .title_bottom(instructions)
                 .border_set(border::THICK);
             self.add_popup.borrow_mut().render(block.inner(area), buf);
             block.render(area, buf);
         } else {
             let title = Line::from(" Nasin ".bold());
+            let instructions = Line::from(vec![
+                " Down ".into(),
+                "<j/Down>".blue().bold(),
+                " Up ".into(),
+                "<k/Up>".blue().bold(),
+                " Step ".into(),
+                "<s>".blue().bold(),
+                " Finish ".into(),
+                "<f>".blue().bold(),
+                " Toggle Pause ".into(),
+                "<p>".blue().bold(),
+                " Remove ".into(),
+                "<d>".blue().bold(),
+                " Add ".into(),
+                "<a>".blue().bold(),
+                " Quit ".into(),
+                "<q/Esc> ".blue().bold(),
+            ]);
             let block = Block::bordered()
                 .title(title.centered())
+                .title_bottom(instructions)
                 .border_set(border::THICK);
             let header = Row::new(vec![
                 "P?".bold(),
