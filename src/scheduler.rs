@@ -80,12 +80,12 @@ impl Eq for Task {}
 
 impl Ord for Task {
     fn cmp(&self, other: &Self) -> Ordering {
-	if self.paused {
-	    return Ordering::Greater;
-	}
-	if other.paused {
-	    return Ordering::Less;
-	}
+        if self.paused {
+            return Ordering::Greater;
+        }
+        if other.paused {
+            return Ordering::Less;
+        }
         match self.priority.cmp(&other.priority) {
             Ordering::Equal => other.age.cmp(&self.age),
             x => x,
@@ -96,6 +96,12 @@ impl Ord for Task {
 #[derive(Clone, Serialize, Deserialize)]
 pub struct Tasks {
     pub tasks: Vec<Task>,
+}
+
+impl Default for Tasks {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Tasks {
@@ -114,17 +120,17 @@ impl Tasks {
             for task in &mut ret.tasks {
                 if let Some(date) = task.deadline {
                     let new_priority = Task::priority_from_deadline(date);
-		    if task.base_priority != new_priority {
-			task.base_priority = new_priority;
-			priority_modified = true
-		    }
+                    if task.base_priority != new_priority {
+                        task.base_priority = new_priority;
+                        priority_modified = true
+                    }
                     task.base_priority = Task::priority_from_deadline(date);
                     task.priority = task.priority.min(task.base_priority)
                 }
             }
-	    if priority_modified {
-		ret.tasks.sort();
-	    }
+            if priority_modified {
+                ret.tasks.sort();
+            }
             ret
         }
     }

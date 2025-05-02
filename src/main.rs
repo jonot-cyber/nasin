@@ -1,6 +1,4 @@
-mod scheduler;
-
-use crate::scheduler::{Task, Tasks};
+use nasin::scheduler::{Task, Tasks};
 
 use std::cell::RefCell;
 use std::rc::Rc;

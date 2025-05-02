@@ -13,5 +13,8 @@
       nasin = pkgs.callPackage ./default.nix {};
       default = nasin;
     };
+    devShells.default = pkgs.mkShell {
+      buildInputs = with pkgs; [ gtk4 pkg-config libadwaita openssl ];
+    };
   });
 }
